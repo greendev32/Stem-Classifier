@@ -1,3 +1,8 @@
 .idea
 my_model
 simplified_model
+venv/Lib/
+venv/Scripts/
+venv/pyvenv.cfg
+venv/share/
+venv/stemClassifier/__pycache__/
