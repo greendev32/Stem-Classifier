@@ -1,0 +1,1 @@
+This program uses a CNN to classify the angle of each strawberry stem given an input image of strawberries.
