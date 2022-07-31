@@ -20,8 +20,8 @@ from tensorflow.keras.models import Sequential
 
 class StemClassifier:
     def __init__(self):
-        self.img_width = 200
-        self.img_height = 200
+        self.img_width = 0
+        self.img_height = 0
         self.batch_size = 32
         self.epochs = 10
 
@@ -36,7 +36,10 @@ class StemClassifier:
         self.class_names = np.array(class_names)
         self.num_classes = len(self.class_names)
 
-    def loadDataset(self, dirName):
+    def loadDataset(self, dirName, width, height):
+        self.img_width = width
+        self.img_height = height
+
         self.train_ds = tf.keras.utils.image_dataset_from_directory(
             dirName,
             validation_split=0.2,
@@ -75,7 +78,7 @@ class StemClassifier:
         self.model.summary()
 
     def createResNet50Model(self):
-        input = tf.keras.Input(shape=(224, 224, 3))
+        input = tf.keras.Input(shape=(self.img_height, self.img_width, 3))
         res_model = tf.keras.applications.resnet50.ResNet50(
                     include_top=False,
                     weights='imagenet',
@@ -88,7 +91,7 @@ class StemClassifier:
         for i, layer in enumerate(res_model.layers):
             print(i, layer.name, "-", layer.trainable)
 
-        to_res = (224, 224)
+        to_res = (self.img_height, self.img_width)
 
         model = tf.keras.models.Sequential()
         model.add(tf.keras.layers.Lambda(lambda image: tf.image.resize(image, to_res)))
