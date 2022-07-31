@@ -23,6 +23,7 @@ class StemClassifier:
         self.img_width = 200
         self.img_height = 200
         self.batch_size = 32
+        self.epochs = 10
 
         class_names = ['0\u00B0 to 45\u00B0',
                        '45\u00B0 to 90\u00B0',
@@ -33,6 +34,7 @@ class StemClassifier:
                        '270\u00B0 to 315\u00B0',
                        '315\u00B0 to 360\u00B0']
         self.class_names = np.array(class_names)
+        self.num_classes = len(self.class_names)
 
     def loadDataset(self, dirName):
         self.train_ds = tf.keras.utils.image_dataset_from_directory(
@@ -52,8 +54,6 @@ class StemClassifier:
             batch_size=self.batch_size)
 
     def createModel(self):
-        num_classes = len(self.class_names)
-
         self.model = Sequential([
             layers.Rescaling(1. / 255, input_shape=(self.img_height, self.img_width, 3)),
             layers.Conv2D(16, 3, padding='same', activation='relu'),
@@ -65,7 +65,7 @@ class StemClassifier:
             layers.Dropout(0.2),
             layers.Flatten(),
             layers.Dense(128, activation='relu'),
-            layers.Dense(num_classes)
+            layers.Dense(self.num_classes)
         ])
 
         self.model.compile(optimizer='adam',
@@ -74,12 +74,50 @@ class StemClassifier:
 
         self.model.summary()
 
+    def createResNet50Model(self):
+        input = tf.keras.Input(shape=(224, 224, 3))
+        res_model = tf.keras.applications.resnet50.ResNet50(
+                    include_top=False,
+                    weights='imagenet',
+                    input_tensor=input
+        )
+
+        for layer in res_model.layers[:143]:
+            layer.trainable = False
+            # Check the freezed was done ok
+        for i, layer in enumerate(res_model.layers):
+            print(i, layer.name, "-", layer.trainable)
+
+        to_res = (224, 224)
+
+        model = tf.keras.models.Sequential()
+        model.add(tf.keras.layers.Lambda(lambda image: tf.image.resize(image, to_res)))
+        model.add(res_model)
+        model.add(tf.keras.layers.Flatten())
+        model.add(tf.keras.layers.BatchNormalization())
+        model.add(tf.keras.layers.Dense(256, activation='relu'))
+        model.add(tf.keras.layers.Dropout(0.5))
+        model.add(tf.keras.layers.BatchNormalization())
+        model.add(tf.keras.layers.Dense(128, activation='relu'))
+        model.add(tf.keras.layers.Dropout(0.5))
+        model.add(tf.keras.layers.BatchNormalization())
+        model.add(tf.keras.layers.Dense(64, activation='relu'))
+        model.add(tf.keras.layers.Dropout(0.5))
+        model.add(tf.keras.layers.BatchNormalization())
+        model.add(tf.keras.layers.Dense(10, activation='softmax'))
+        layers.Dense(self.num_classes)
+
+        model.compile(optimizer=tf.keras.optimizers.RMSprop(learning_rate=2e-5),
+                      loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+                      metrics=['accuracy'])
+
+        self.model = model
+
     def trainModel(self, modelName):
-        epochs = 10
         history = self.model.fit(
             self.train_ds,
             validation_data=self.val_ds,
-            epochs=epochs
+            epochs=self.epochs
         )
 
         # saved to folder C:\Users\green\PycharmProjects\stemClassifier

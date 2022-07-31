@@ -1,6 +1,7 @@
 .idea
 my_model
 simplified_model
+resnet50_model
 venv/Lib/
 venv/Scripts/
 venv/pyvenv.cfg
