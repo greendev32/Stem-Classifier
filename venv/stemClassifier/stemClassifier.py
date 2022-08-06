@@ -6,6 +6,7 @@
 # This script includes a GUI that displays the results of the
 # model running on new images from the test dataset.
 
+import matplotlib.pyplot as plt
 import numpy as np
 import random
 import tensorflow as tf
@@ -122,6 +123,28 @@ class StemClassifier:
             validation_data=self.val_ds,
             epochs=self.epochs
         )
+
+        acc = history.history['accuracy']
+        val_acc = history.history['val_accuracy']
+
+        loss = history.history['loss']
+        val_loss = history.history['val_loss']
+
+        epochs_range = range(self.epochs)
+
+        plt.figure(figsize=(8, 8))
+        plt.subplot(1, 2, 1)
+        plt.plot(epochs_range, acc, label='Training Accuracy')
+        plt.plot(epochs_range, val_acc, label='Validation Accuracy')
+        plt.legend(loc='lower right')
+        plt.title('Training and Validation Accuracy')
+
+        plt.subplot(1, 2, 2)
+        plt.plot(epochs_range, loss, label='Training Loss')
+        plt.plot(epochs_range, val_loss, label='Validation Loss')
+        plt.legend(loc='upper right')
+        plt.title('Training and Validation Loss')
+        plt.show()
 
         # saved to folder C:\Users\green\PycharmProjects\stemClassifier
         self.model.save(modelName)
