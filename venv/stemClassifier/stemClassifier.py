@@ -61,14 +61,21 @@ class StemClassifier:
         self.model = Sequential([
             layers.Rescaling(1. / 255, input_shape=(self.img_height, self.img_width, 3)),
             layers.Conv2D(16, 3, padding='same', activation='relu'),
+            layers.BatchNormalization(),
             layers.MaxPooling2D(),
+            layers.Dropout(0.2),
             layers.Conv2D(32, 3, padding='same', activation='relu'),
+            layers.BatchNormalization(),
             layers.MaxPooling2D(),
+            layers.Dropout(0.2),
             layers.Conv2D(64, 3, padding='same', activation='relu'),
+            layers.BatchNormalization(),
             layers.MaxPooling2D(),
             layers.Dropout(0.2),
             layers.Flatten(),
             layers.Dense(128, activation='relu'),
+            layers.BatchNormalization(),
+            layers.Dropout(0.5),
             layers.Dense(self.num_classes)
         ])
 
