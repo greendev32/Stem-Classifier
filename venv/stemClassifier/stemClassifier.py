@@ -204,9 +204,11 @@ class StemClassifier:
         imgTk.grid(column=1, row=0, columnspan=1, rowspan=1, padx=20, pady=20)
         self.imageLabel.grid(column=1, row=1, padx=20, pady=20)
 
-    def classify(self, modelDirName, imgDir):
+    def classify(self, modelDirName, imgDir, imgWidth, imgHeight):
         # get all image files and model
         self.imgDir = imgDir
+        self.img_width = imgWidth
+        self.img_height = imgHeight
         self.onlyfiles = [f for f in listdir(imgDir) if isfile(join(imgDir, f))]
         random.shuffle(self.onlyfiles)
         self.model = tf.keras.models.load_model(modelDirName)
