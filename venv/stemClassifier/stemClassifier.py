@@ -27,13 +27,14 @@ class StemClassifier:
         self.epochs = 10
 
         class_names = ['0\u00B0 to 45\u00B0',
-                       '45\u00B0 to 90\u00B0',
-                       '90\u00B0 to 135\u00B0',
                        '135\u00B0 to 180\u00B0',
                        '180\u00B0 to 225\u00B0',
                        '225\u00B0 to 270\u00B0',
                        '270\u00B0 to 315\u00B0',
-                       '315\u00B0 to 360\u00B0']
+                       '315\u00B0 to 360\u00B0',
+                       '45\u00B0 to 90\u00B0',
+                       '90\u00B0 to 135\u00B0']
+
         self.class_names = np.array(class_names)
         self.num_classes = len(self.class_names)
 
