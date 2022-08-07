@@ -188,7 +188,9 @@ class StemClassifier:
             .format(self.class_names[np.argmax(score)], 100 * np.max(score))
         )
 
-        self.img = ImageTk.PhotoImage(Image.open(self.imgDir + self.onlyfiles[self.imgIdx]))
+        self.img = Image.open(self.imgDir + self.onlyfiles[self.imgIdx])
+        self.img  = self.img.resize((400, 400)) # display all images as 400x400px
+        self.img = ImageTk.PhotoImage(self.img)
         imgTk = tkinter.Label(self.content, image=self.img)
 
         self.imageLabel.destroy() # prevents stacking past labels on top of each other
@@ -213,7 +215,7 @@ class StemClassifier:
 
         # create a GUI
         self.root = tkinter.Tk()
-        self.root.geometry("420x300")
+        self.root.geometry("615x500")
         self.content = tkinter.Frame(self.root)
         self.content.grid(column=0, row=0)
         self.imageLabel = tkinter.Label(self.content, text="")
