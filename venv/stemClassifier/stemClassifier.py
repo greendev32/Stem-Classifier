@@ -30,14 +30,23 @@ class StemClassifier:
         self.roi = False # ROI mode
         self.originalDataset = True
 
-        class_names = ['0\u00B0 to 45\u00B0',
-                       '135\u00B0 to 180\u00B0',
-                       '180\u00B0 to 225\u00B0',
-                       '225\u00B0 to 270\u00B0',
-                       '270\u00B0 to 315\u00B0',
-                       '315\u00B0 to 360\u00B0',
-                       '45\u00B0 to 90\u00B0',
-                       '90\u00B0 to 135\u00B0']
+        # class_names = ['0\u00B0 to 45\u00B0',
+        #                '135\u00B0 to 180\u00B0',
+        #                '180\u00B0 to 225\u00B0',
+        #                '225\u00B0 to 270\u00B0',
+        #                '270\u00B0 to 315\u00B0',
+        #                '315\u00B0 to 360\u00B0',
+        #                '45\u00B0 to 90\u00B0',
+        #                '90\u00B0 to 135\u00B0']
+
+        class_names = ['0to45',
+                       '135to180',
+                       '180to225',
+                       '225to270',
+                       '270to315',
+                       '315to360',
+                       '45to90',
+                       '90to135']
 
         self.class_names = np.array(class_names)
         self.num_classes = len(self.class_names)
