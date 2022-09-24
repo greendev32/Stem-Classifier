@@ -26,7 +26,7 @@ class StemClassifier:
         self.img_width = 0
         self.img_height = 0
         self.batch_size = 32
-        self.epochs = 10
+        self.epochs = 20
         self.roi = False # ROI mode
         self.originalDataset = True
 
