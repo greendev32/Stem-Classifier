@@ -415,3 +415,69 @@ class StemClassifier:
 
         self.root.title("Stem Classifier")
         self.root.mainloop()  # Start the GUI
+
+    def getPercentAccuracy(self, modelDirName, imgDir, imgWidth, imgHeight):
+        imgDir = imgDir
+        img_width = imgWidth
+        img_height = imgHeight
+        onlyfiles = [f for f in listdir(imgDir) if isfile(join(imgDir, f))]
+        numFiles = len(onlyfiles)
+        numCorrect = 0
+        filesScanned = 0
+        model = tf.keras.models.load_model(modelDirName)
+
+        for file in onlyfiles:
+            print("File #" + str(filesScanned));
+            img = tf.keras.utils.load_img(imgDir + file,
+                                          target_size=(imgHeight, imgWidth))
+
+            img_array = tf.keras.utils.img_to_array(img)
+            img_array = tf.expand_dims(img_array, 0)  # Create a batch
+
+            predictions = model.predict(img_array)
+            score = tf.nn.softmax(predictions[0])
+
+            labelText = str(self.class_names[np.argmax(score)])
+
+            # check for exact classification
+            # if labelText in file:
+            #     numCorrect += 1
+
+            '0to45'
+            '135to180'
+            '180to225'
+            '225to270'
+            '270to315'
+            '315to360'
+            '45to90'
+            '90to135'
+
+            # check for acceptable classification
+            if labelText == '0to45':
+                if (labelText in file) or ('45to90' in file) or ('315to360' in file):
+                    numCorrect +=1
+            elif labelText == '135to180':
+                if (labelText in file) or ('90to135' in file) or ('180to225' in file):
+                    numCorrect +=1
+            elif labelText == '180to225':
+                if (labelText in file) or ('135to180' in file) or ('225to270' in file):
+                    numCorrect +=1
+            elif labelText == '225to270':
+                if (labelText in file) or ('180to225' in file) or ('270to315' in file):
+                    numCorrect +=1
+            elif labelText == '270to315':
+                if (labelText in file) or ('225to270' in file) or ('315to360' in file):
+                    numCorrect +=1
+            elif labelText == '315to360':
+                if (labelText in file) or ('270to315' in file) or ('0to45' in file):
+                    numCorrect +=1
+            elif labelText == '45to90':
+                if (labelText in file) or ('0to45' in file) or ('90to135' in file):
+                    numCorrect +=1
+            elif labelText == '90to135':
+                if (labelText in file) or ('45to90' in file) or ('135to180' in file):
+                    numCorrect +=1
+
+            filesScanned += 1
+
+        print("Result: " + str(numCorrect / numFiles * 100) + " percent correct")
